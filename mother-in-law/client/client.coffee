@@ -71,7 +71,8 @@ Template.map.rendered = ->
 
   # click on the map and will insert the latlng into the markers collection 
   root.map.on 'click', (e) ->
-    if not Session.get("done")?
+    if not Session.get("done")? and not Session.get("clicked")?
+      Session.set("clicked","true")
       id = Markers.insert
         latlng: e.latlng
       Session.set "newDeliver", id

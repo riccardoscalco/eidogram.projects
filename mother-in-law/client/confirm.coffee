@@ -6,6 +6,7 @@ Template.confirm.events
     $("#content-confirm").collapse('hide')
     Markers.remove Session.get("newDeliver")
     root.map.removeLayer(root.newMarker)
+    delete Session.keys['clicked']
   'click #btn-yes': (e) ->
     e.preventDefault()
     $("#done").collapse('show')
