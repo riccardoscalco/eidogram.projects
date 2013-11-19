@@ -36,7 +36,7 @@ Template.map.rendered = ->
   root.map = new L.Map "map", {
       center: new L.LatLng(30, 0)
       zoom: 3
-      doubleClickZoom: false
+      doubleClickZoom: true
       }
   root.map.addLayer layer
 
@@ -69,16 +69,25 @@ Template.map.rendered = ->
   root.circle.addTo(map)
   ###
 
+
   # click on the map and will insert the latlng into the markers collection 
+  clickCount = 0
   root.map.on 'click', (e) ->
-    if not Session.get("done")? and not Session.get("clicked")?
-      Session.set("clicked","true")
-      id = Markers.insert
-        latlng: e.latlng
-      Session.set "newDeliver", id
-      $("#content-confirm").collapse('show')
-      ##if $("#done").hasClass("in")
-      ##  $("#done").collapse('hide')
+    if not Session.get("done")?
+      clickCount += 1
+      if (clickCount <= 1)
+        Meteor.setTimeout () ->
+          if clickCount <= 1 and not Session.get("clicked")?
+            Session.set("clicked","true")
+            id = Markers.insert {latlng: e.latlng}
+            Session.set "newDeliver", id
+            $("#content-confirm").collapse('show')
+          clickCount = 0
+        , 500
+
+
+
+
 
   # watch the markers collection
   query = Markers.find({})
